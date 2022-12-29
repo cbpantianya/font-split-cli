@@ -50,5 +50,38 @@ async function templateCSSFetch(url) {
         });
 }
 
+function unicodeMerge(unicodeArray) {
+    let unicodeRangeStr = '';
+    for (let i = 0; i < unicodeArray.length; i++) {
+        // merge
+        if (i + 1 < unicodeArray.length) {
+            let start = parseInt(unicodeArray[i].replace('U+', ''), 16);
+            let next = parseInt(unicodeArray[i + 1].replace('U+', ''), 16);
+            if (next - start === 1) {
+                while (
+                    i + 1 < unicodeArray.length &&
+                    parseInt(unicodeArray[i].replace('U+', ''), 16)+1 ===
+                        parseInt(unicodeArray[i + 1].replace('U+', ''), 16)
+                ) {
+                    i++;
+                }
+                unicodeRangeStr += `U+${start
+                    .toString(16)
+                    .toLowerCase()}-${unicodeArray[i].replace('U+', '')},`;
+            }else{
+                unicodeRangeStr += `${unicodeArray[i]},`;
+            }
+        }else{
+            unicodeRangeStr += `${unicodeArray[i]},`;
+        }
+    }
+    // remove last ','
+    if(unicodeRangeStr.endsWith(',')){
+        unicodeRangeStr = unicodeRangeStr.slice(0,-1);
+    }
+    return unicodeRangeStr
+}
+
 module.exports.unicodeDecoder = unicodeDecoder;
 module.exports.templateCSSFetch = templateCSSFetch;
+module.exports.unicodeMerge = unicodeMerge;

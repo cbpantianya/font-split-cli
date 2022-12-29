@@ -1,13 +1,11 @@
 {
   "files": [
     "bin",
-    "src/core",
-    "src/env",
-    "script",
+    "src",
     "README.md"
   ],
   "name": "font-split-cli",
-  "version": "0.0.1a",
+  "version": "0.0.1-pre.1",
   "description": "A tool for splitting font files",
   "keywords": [
     "font",
