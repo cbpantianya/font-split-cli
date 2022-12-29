@@ -87,7 +87,7 @@ function argsDecoder() {
             process.exit(0);
         }
         if (val === '-v' || val === '--version') {
-            console.log('0.0.1b');
+            console.log('0.0.1.pre.1');
             process.exit(0);
         } else if (val === '-c' || val === '--config') {
             // check
