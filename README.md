@@ -29,28 +29,36 @@ npm install -g font-split
 ```
 
 ## Usage
-
-Do NOT specify the template that with more than 1 font-weight.
-
-This tool only tests on Google fonts.
-
+Please make sure that the unicode range is correct, and not duplicated.
 example:
-
 ```bash
-font-split --font "./font.otf" --family "SourceHans" --weight 400 --template "https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap" 
+font-split -c ./config.json
+```
+config.json(recommend)
+```json
+{
+    "template": {
+        "type": "remote",
+        "path": "https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap"
+    },
+    "font-style": {
+        "family": "Noto Sans SC",
+        "style": "normal",
+        "weight": "400",
+        "display": "swap"
+    },
+    "target-font": {
+        "path": "./Noto.ttf",
+    }
+}
 ```
 
 ## Todo:
 
 1. Support local css file
-2. merge Unicode Range
-3. Read config from file
-4. Remove duplicate Unicode Range
-5. Optimize user interaction
-6. cusomized url
-7. Env check
-8. Merge css file
-9. ...
+2. Remove duplicate Unicode Range
+3. Merge css file
+4. ...
 
 ## Contributing
 

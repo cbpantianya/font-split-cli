@@ -1,9 +1,7 @@
 {
   "files": [
     "bin",
-    "src/core",
-    "src/env",
-    "script",
+    "src",
     "README.md"
   ],
   "name": "font-split-cli",
