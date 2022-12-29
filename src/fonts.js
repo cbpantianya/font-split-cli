@@ -1,5 +1,8 @@
 const execSync = require('child_process').execSync;
 const fs = require('fs');
+const process = require('process');
+const css = require('./css');
+const crypto = require('crypto');
 
 /**
  *
@@ -9,7 +12,12 @@ const fs = require('fs');
 function getCMAP(filePath) {
     console.log('Generate CMAP... ');
     let cmd = `ttx -t cmap -o "cmap.xml" "${filePath}"`;
-    execSync(cmd).toString();
+    try {
+        execSync(cmd);
+    } catch {
+        console.log('[Error]Look the details above');
+        process.exit(1);
+    }
 
     // read file
     let cmapRaw = fs.readFileSync('cmap.xml', 'utf-8');
@@ -47,33 +55,37 @@ function match(unicodes, cmap) {
  * @param {Array} unicodes
  * @param {string} taegetFont
  */
-function generateWoff2(unicodes, taegetFont, family,weight) {
-    if (!fs.existsSync('outputs')) {
-        fs.mkdirSync(`outputs`);
+function generateWoff2(unicodes, taegetFont, family, weight, style, display) {
+    if (fs.existsSync('outputs')) {
+        //clean
+        fs.rmSync('outputs', { recursive: true });
     }
+
+    fs.mkdirSync(`outputs`);
 
     let cssOutput = '';
     unicodes.forEach((item) => {
+        let filename = crypto
+            .createHash('md5')
+            .update(item.unicodes.join(''))
+            .digest('hex');
+        console.log(`Generate ${filename}.woff2... `);
+
         // create dir
         let cmd = `fonttools subset --unicodes="${item.unicodes.join(
             ','
-        )}" --output-file="./outputs/font-${item.index}.ttf" ${taegetFont}`;
+        )}" --output-file="./outputs/${filename}.ttf" ${taegetFont}`;
         execSync(cmd);
         // compress
-        cmd = `fonttools ttLib.woff2 compress ./outputs/font-${item.index}.ttf --output-file=./outputs/font-${item.index}.woff2`;
+        cmd = `fonttools ttLib.woff2 compress ./outputs/${filename}.ttf --output-file=./outputs/${filename}.woff2`;
         execSync(cmd);
         // delete TTF
-        fs.rmSync(`./outputs/font-${item.index}.ttf`);
+        fs.rmSync(`./outputs/${filename}.ttf`);
+
+        let unicodeRangeStr = css.unicodeMerge(item.unicodes);
+
         // generate css
-        cssOutput += `@font-face {
-            font-family: '${family}';
-            font-style: normal;
-            font-weight: ${weight};
-            font-display: swap;
-            src: url('./font-${item.index}.woff2') format('woff2');
-            unicode-range: ${item.unicodes.join(', ')}
-        }
-        `;
+        cssOutput += `@font-face {font-family: '${family}';font-style: ${style};font-weight: ${weight};font-display: ${display};src: url('${filename}.woff2') format('woff2');unicode-range: ${unicodeRangeStr};}`;
     });
 
     fs.writeFileSync('./outputs/font.css', cssOutput);

@@ -1,18 +1,27 @@
 #!/usr/bin/env node
 'use strict';
-const css = require('../src/core/css');
-const fonts = require('../src/core/fonts');
-const args = require('../src/core/args');
 
-const argvs = args.args();
+const config = require('../src/config');
+const argsConfig = config.argsDecoder();
+const cfg = config.configDecoder(argsConfig.configFile);
 
-const templatUrl = argvs.template;
+const css = require('../src/css');
+const fonts = require('../src/fonts');
 
-const targetFont = argvs.font;
-
-css.templateCSSFetch(templatUrl).then((res) => {
-    let unicodes = css.unicodeDecoder(res);
-    let cmap = fonts.cmap(targetFont)
-    let support_unicodes = fonts.match(unicodes, cmap)
-    fonts.generateTTF(support_unicodes, targetFont, argvs.family, argvs.weight)
-});
+if (cfg.template.type === 'remote') {
+    css.templateCSSFetch(cfg.template.path).then((res) => {
+        let unicodes = css.unicodeDecoder(res);
+        let cmap = fonts.cmap(cfg['target-font'].path);
+        let support_unicodes = fonts.match(unicodes, cmap);
+        fonts.generateTTF(
+            support_unicodes,
+            cfg['target-font'].path,
+            cfg['font-style']['family'],
+            cfg['font-style']['weight'],
+            cfg['font-style']['style'],
+            cfg['font-style']['display']
+        );
+    });
+} else if (cfg.template.type === 'local') {
+    console.log('local will support later');
+}

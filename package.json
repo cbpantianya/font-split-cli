@@ -7,7 +7,7 @@
     "README.md"
   ],
   "name": "font-split-cli",
-  "version": "0.0.1a",
+  "version": "0.0.1b",
   "description": "A tool for splitting font files",
   "keywords": [
     "font",
