@@ -1,0 +1,43 @@
+{
+  "files": [
+    "bin",
+    "src/core",
+    "src/env",
+    "script",
+    "README.md"
+  ],
+  "name": "font-split-cli",
+  "version": "0.0.1a",
+  "description": "A tool for splitting font files",
+  "keywords": [
+    "font",
+    "subset",
+    "split",
+    "cli"
+  ],
+  "author": "cbpantianya",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cbpantianya/font-split-cli"
+  },
+  "homepage": "https://github.com/cbpantianya/font-split-cli",
+  "bugs": {
+    "url": "https://github.com/cbpantianya/font-split-cli/issues"
+  },
+  "bin": {
+    "font-split": "bin/font-split"
+  },
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,css,md}\"",
+    "test": "node ./test/font-split-test"
+  },
+  "devDependencies": {
+    "eslint": "^8.30.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "2.8.1"
+  },
+  "dependencies": {
+    "node-fetch": "2"
+  }
+}

@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+'use strict';
+const css = require('../src/core/css');
+const fonts = require('../src/core/fonts');
+const args = require('../src/core/args');
+
+const argvs = args.args();
+
+const templatUrl = argvs.template;
+
+const targetFont = argvs.font;
+
+css.templateCSSFetch(templatUrl).then((res) => {
+    let unicodes = css.unicodeDecoder(res);
+    let cmap = fonts.cmap(targetFont)
+    let support_unicodes = fonts.match(unicodes, cmap)
+    fonts.generateTTF(support_unicodes, targetFont, argvs.family, argvs.weight)
+});
